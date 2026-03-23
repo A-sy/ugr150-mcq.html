@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Critical Thinking & Practical Reasoning Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --card: #1a1a24;
+    --border: #2a2a3a;
+    --accent: #6c63ff;
+    --accent2: #ff6584;
+    --green: #43e97b;
+    --red: #ff5b5b;
+    --text: #f0f0f8;
+    --muted: #8888aa;
+    --gold: #ffd166;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(108,99,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(108,99,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 20px 16px 60px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 48px 0 40px;
+  }
+
+  .tag {
+    display: inline-block;
+    background: rgba(108,99,255,0.15);
+    border: 1px solid rgba(108,99,255,0.4);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 800;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 15px;
+    font-weight: 300;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  .stat-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+  }
+
+  .stat-pill span {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
+  }
+
+  /* Progress */
+  .progress-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 20px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .progress-label {
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  .progress-bar-bg {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #a78bfa);
+    border-radius: 10px;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+
+  .progress-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  /* Question card */
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 28px 28px;
+    margin-bottom: 16px;
+    animation: slideIn 0.4s cubic-bezier(.4,0,.2,1);
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-number {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .q-number::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .q-text {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.65;
+    color: var(--text);
+    margin-bottom: 24px;
+  }
+
+  /* Options */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    transition: all 0.2s ease;
+    font-size: 14.5px;
+    line-height: 1.5;
+    text-align: left;
+  }
+
+  .option:hover:not(.disabled) {
+    border-color: var(--accent);
+    background: rgba(108,99,255,0.08);
+    transform: translateX(4px);
+  }
+
+  .option-letter {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    border-radius: 8px;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    transition: all 0.2s;
+    margin-top: 1px;
+  }
+
+  .option.correct {
+    border-color: var(--green);
+    background: rgba(67,233,123,0.08);
+  }
+
+  .option.correct .option-letter {
+    background: var(--green);
+    color: #000;
+  }
+
+  .option.wrong {
+    border-color: var(--red);
+    background: rgba(255,91,91,0.08);
+  }
+
+  .option.wrong .option-letter {
+    background: var(--red);
+    color: #fff;
+  }
+
+  .option.disabled { cursor: default; }
+
+  /* Feedback */
+  .feedback {
+    margin-top: 16px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .feedback.correct-fb {
+    background: rgba(67,233,123,0.1);
+    border: 1px solid rgba(67,233,123,0.3);
+    color: #7effa8;
+    display: block;
+  }
+
+  .feedback.wrong-fb {
+    background: rgba(255,91,91,0.1);
+    border: 1px solid rgba(255,91,91,0.3);
+    color: #ff9090;
+    display: block;
+  }
+
+  /* Nav buttons */
+  .nav-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .btn-primary:hover { background: #8379ff; transform: translateY(-2px); }
+  .btn-primary:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Results screen */
+  .results-screen {
+    display: none;
+    animation: slideIn 0.5s cubic-bezier(.4,0,.2,1);
+  }
+
+  .result-hero {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 48px 32px;
+    text-align: center;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result-hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%; transform: translateX(-50%);
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(108,99,255,0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .result-emoji {
+    font-size: 56px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .result-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .result-score {
+    font-family: 'Syne', sans-serif;
+    font-size: 64px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--gold), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin: 20px 0 8px;
+  }
+
+  .result-sub {
+    color: var(--muted);
+    font-size: 15px;
+  }
+
+  .result-breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .breakdown-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 12px;
+    text-align: center;
+  }
+
+  .breakdown-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+
+  .breakdown-lbl {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+  }
+
+  .green-val { color: var(--green); }
+  .red-val { color: var(--red); }
+  .blue-val { color: var(--accent); }
+
+  .review-section {
+    margin-top: 8px;
+  }
+
+  .review-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .review-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .review-dot {
+    width: 10px;
+    height: 10px;
+    min-width: 10px;
+    border-radius: 50%;
+    margin-top: 5px;
+  }
+
+  .review-dot.r-correct { background: var(--green); }
+  .review-dot.r-wrong { background: var(--red); }
+
+  .review-q {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .review-ans {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .review-ans .r-your { color: var(--red); }
+  .review-ans .r-correct-a { color: var(--green); }
+
+  /* Start screen */
+  .start-screen {
+    text-align: center;
+    padding: 20px 0 40px;
+  }
+
+  .start-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 48px 32px;
+    margin-bottom: 24px;
+  }
+
+  .start-icon {
+    font-size: 52px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .start-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+
+  .start-desc {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 480px;
+    margin: 0 auto 32px;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .info-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 12px;
+    text-align: center;
+  }
+
+  .info-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .info-lbl {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .btn-start {
+    width: 100%;
+    max-width: 320px;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--accent), #a78bfa);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-start:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(108,99,255,0.4); }
+
+  /* Quiz screen */
+  #quiz-screen { display: none; }
+
+  @media (max-width: 520px) {
+    .result-breakdown { grid-template-columns: 1fr 1fr; }
+    .info-grid { grid-template-columns: 1fr 1fr; }
+    .question-card { padding: 22px 18px 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="header">
+    <div class="tag">University of Ghana · UGRC150</div>
+    <h1>Critical Thinking &<br>Practical Reasoning</h1>
+    <p class="subtitle">Test your knowledge with past exam questions</p>
+  </div>
+
+  <!-- START SCREEN -->
+  <div id="start-screen" class="start-screen">
+    <div class="start-card">
+      <span class="start-icon">🧠</span>
+      <div class="start-title">Ready to test your reasoning?</div>
+      <p class="start-desc">
+        This quiz covers key topics from the UGRC150 course — definitions, fallacies, arguments, logic, and more. Each question is drawn directly from past exam papers.
+      </p>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-val">25</div>
+          <div class="info-lbl">Questions</div>
+        </div>
+        <div class="info-card">
+          <div class="info-val">MCQ</div>
+          <div class="info-lbl">Format</div>
+        </div>
+        <div class="info-card">
+          <div class="info-val">~15<span style="font-size:14px">min</span></div>
+          <div class="info-lbl">Est. Time</div>
+        </div>
+      </div>
+      <button class="btn-start" onclick="startQuiz()">Start Quiz →</button>
+    </div>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quiz-screen">
+    <div class="stats-bar">
+      <div class="stat-pill">Q <span id="q-counter">1</span> of 25</div>
+      <div class="stat-pill">✅ Correct: <span id="correct-count">0</span></div>
+      <div class="stat-pill">❌ Wrong: <span id="wrong-count">0</span></div>
+    </div>
+
+    <div class="progress-wrap">
+      <span class="progress-label">Progress</span>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
+      <span class="progress-num" id="progress-pct">0%</span>
+    </div>
+
+    <div id="question-area"></div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevQ()" id="prev-btn">← Previous</button>
+      <button class="btn btn-primary" onclick="nextQ()" id="next-btn">Next →</button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="results-screen" class="results-screen">
+    <div class="result-hero">
+      <span class="result-emoji" id="result-emoji">🎉</span>
+      <div class="result-title" id="result-title">Great job!</div>
+      <div class="result-score" id="result-score">0%</div>
+      <div class="result-sub" id="result-sub">0 out of 25 correct</div>
+      <div class="result-breakdown">
+        <div class="breakdown-item">
+          <div class="breakdown-val green-val" id="bd-correct">0</div>
+          <div class="breakdown-lbl">Correct</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="breakdown-val red-val" id="bd-wrong">0</div>
+          <div class="breakdown-lbl">Wrong</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="breakdown-val blue-val" id="bd-pct">0%</div>
+          <div class="breakdown-lbl">Score</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-section">
+      <div class="review-title">📋 Answer Review</div>
+      <div id="review-list"></div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:24px">
+      <button class="btn btn-primary" onclick="restartQuiz()">🔁 Retake Quiz</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  {
+    q: "Which of the following best describes a factual statement?",
+    opts: ["Factuals educate by providing insights into the meaning of concepts.", "Factuals inform by objectively describing what exists; value judgments subjectively prescribe what should be; definitions give meaning to words.", "Factuals prescribe what should be there, while value judgments describe what is there.", "Factuals subjectively describe what should be there."],
+    ans: 1
+  },
+  {
+    q: "The expression 'The best academic of all time' exemplifies...",
+    opts: ["Sentence fragment", "Value judgment (moral)", "Value judgment (non-moral)", "Emotive expression"],
+    ans: 2
+  },
+  {
+    q: "The components of a definition are:",
+    opts: ["Well-defined and open textured words", "Connotation and denotation", "Broad and narrow definitions", "Definiendum and definiens"],
+    ans: 3
+  },
+  {
+    q: "Which senses of law has sanctions attached to it?",
+    opts: ["Logical law", "Scientific law", "Civil law", "Mathematical law"],
+    ans: 2
+  },
+  {
+    q: "'Consciousness is either a physical thing or a nonphysical thing. Since it is not a physical thing, it must be nonphysical.' Which sense of law is exemplified here?",
+    opts: ["Mathematical law", "Moral law", "Logical law", "Natural law"],
+    ans: 2
+  },
+  {
+    q: "The part of an argument that offers justification for the claim being made is described as the:",
+    opts: ["Premise", "Induction", "Deduction", "Conclusion"],
+    ans: 0
+  },
+  {
+    q: "According to the deductive rule...",
+    opts: ["We can only deny an antecedent or affirm a consequent to reach a valid conclusion.", "We can only affirm an antecedent or deny a consequent to reach a valid conclusion.", "We can reach a conclusion with a single premise.", "We assemble at least two premises to reach a conclusion."],
+    ans: 1
+  },
+  {
+    q: "'Quite a good number of Chinese are involved in illegal mining. So China is out to exploit Africa.' This is an example of...",
+    opts: ["Misplaced vividness", "Grandstanding", "Semi-attached figures", "Hasty generalization"],
+    ans: 3
+  },
+  {
+    q: "What fallacy is committed in: 'How can you believe his testimony? He is a convicted felon!'",
+    opts: ["Appeal to anger", "Appeal to pity", "Post hoc ergo propter hoc", "Ad hominem"],
+    ans: 3
+  },
+  {
+    q: "A vitamin supplement was recommended by Dean Karnazes, the world's longest distance runner. This is an example of...",
+    opts: ["Genetic fallacy", "Illegal appeal to authority", "Semi-attached figures", "Misplaced vividness"],
+    ans: 1
+  },
+  {
+    q: "The statement 'Joe Mettle is popular because he is famous and well-known' can be criticized as...",
+    opts: ["Appeal to emotions", "Appeal to authority", "Begging the question", "Circumvention"],
+    ans: 2
+  },
+  {
+    q: "'Johnson still believes in giving and taking bribes, because that is how he was raised.' This is an example of...",
+    opts: ["An appeal to pity", "Grandstanding", "A genetic fallacy", "Illegitimate appeal to authority"],
+    ans: 2
+  },
+  {
+    q: "Which type of discourse is: 'We went to the passport office but the workers were on strike, so we went home.'",
+    opts: ["Instructions", "Polemic", "Narrative", "Argument"],
+    ans: 2
+  },
+  {
+    q: "The numbers 2, 4, 6, 8, 16 represent the ___ of the term 'even'.",
+    opts: ["Connotation", "Denotation", "Essentially contestable", "Ideal definition"],
+    ans: 1
+  },
+  {
+    q: "What logical error is detected when: Lomazah says 'Submission to authority is key in this office' and the new employee interprets it as submitting documents?",
+    opts: ["Equivocation", "Ambiguity", "Vagueness", "Inconsistency"],
+    ans: 0
+  },
+  {
+    q: "Verbal disputes can be resolved by...",
+    opts: ["Enforcing your perspective", "Proffering arguments", "Clarifying the language", "Resisting oppressors"],
+    ans: 2
+  },
+  {
+    q: "Which of the following is an open-textured term?",
+    opts: ["All the given options", "Fidelity", "Religion", "Democracy"],
+    ans: 0
+  },
+  {
+    q: "A lexical definition shows how a word is...",
+    opts: ["Stipulated by the speaker", "Theoretically constructed", "Commonly used", "Demonstrated by pointing"],
+    ans: 2
+  },
+  {
+    q: "In an argument, the expression 'implies that' indicates a/an...",
+    opts: ["Premise", "All the given options", "Validity check", "Conclusion"],
+    ans: 3
+  },
+  {
+    q: "If you accept the premises of a valid deduction to be true but deny the conclusion being true, you create what is called:",
+    opts: ["Ambiguity", "Equivocation", "Vagueness", "Contradiction"],
+    ans: 3
+  },
+  {
+    q: "An error in reasoning is described as a/an:",
+    opts: ["Enthymeme", "None of the given options", "Syllogism", "Fallacy"],
+    ans: 3
+  },
+  {
+    q: "Soundness presupposes validity. True or false?",
+    opts: ["True", "None", "False", "It depends on the argument"],
+    ans: 2
+  },
+  {
+    q: "The passage 'Happiness is the end of life. The end of life is death. So happiness is death' represents which fallacy?",
+    opts: ["Circularity", "Equivocation", "Ad hominem", "Appeal to threat"],
+    ans: 1
+  },
+  {
+    q: "'People are really sadistic. Look at the brutality shown by people such as Adolf Hitler and Idi Amin.' This is an example of...",
+    opts: ["Semi-attached figures", "Hasty generalization", "Unrepresentative sample", "Misplaced vividness"],
+    ans: 3
+  },
+  {
+    q: "Which of the following is a logical truth whose truth-value can be known with certainty without observation?",
+    opts: ["Covid-19 cannot be cured.", "The bachelor beat his wife mercilessly.", "All the given options are correct.", "It is raining at Tema now."],
+    ans: 1
+  }
+];
+
+let current = 0;
+let userAnswers = new Array(questions.length).fill(null);
+let correctCount = 0;
+let wrongCount = 0;
+
+function startQuiz() {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  const letters = ['A', 'B', 'C', 'D'];
+
+  let optionsHtml = q.opts.map((opt, i) => {
+    let cls = 'option';
+    const answered = userAnswers[current] !== null;
+    if (answered) {
+      cls += ' disabled';
+      if (i === q.ans) cls += ' correct';
+      else if (i === userAnswers[current] && userAnswers[current] !== q.ans) cls += ' wrong';
+    }
+    return `<div class="${cls}" onclick="selectAnswer(${i})">
+      <span class="option-letter">${letters[i]}</span>
+      <span>${opt}</span>
+    </div>`;
+  }).join('');
+
+  let feedbackHtml = '';
+  if (userAnswers[current] !== null) {
+    if (userAnswers[current] === q.ans) {
+      feedbackHtml = `<div class="feedback correct-fb">✅ Correct! Well done.</div>`;
+    } else {
+      feedbackHtml = `<div class="feedback wrong-fb">❌ Incorrect. The correct answer is <strong>${letters[q.ans]}. ${q.opts[q.ans]}</strong></div>`;
+    }
+  }
+
+  document.getElementById('question-area').innerHTML = `
+    <div class="question-card">
+      <div class="q-number">Question ${current + 1}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options">${optionsHtml}</div>
+      ${feedbackHtml}
+    </div>
+  `;
+
+  document.getElementById('q-counter').textContent = current + 1;
+  document.getElementById('correct-count').textContent = correctCount;
+  document.getElementById('wrong-count').textContent = wrongCount;
+
+  const pct = Math.round((current / questions.length) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+
+  document.getElementById('prev-btn').disabled = current === 0;
+  document.getElementById('next-btn').textContent = current === questions.length - 1 ? 'Finish ✓' : 'Next →';
+}
+
+function selectAnswer(idx) {
+  if (userAnswers[current] !== null) return;
+  userAnswers[current] = idx;
+  if (idx === questions[current].ans) correctCount++;
+  else wrongCount++;
+  renderQuestion();
+}
+
+function nextQ() {
+  if (current === questions.length - 1) {
+    showResults();
+    return;
+  }
+  current++;
+  renderQuestion();
+}
+
+function prevQ() {
+  if (current === 0) return;
+  current--;
+  renderQuestion();
+}
+
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  const rs = document.getElementById('results-screen');
+  rs.style.display = 'block';
+
+  const total = questions.length;
+  const pct = Math.round((correctCount / total) * 100);
+
+  document.getElementById('result-score').textContent = pct + '%';
+  document.getElementById('result-sub').textContent = `${correctCount} out of ${total} correct`;
+  document.getElementById('bd-correct').textContent = correctCount;
+  document.getElementById('bd-wrong').textContent = wrongCount;
+  document.getElementById('bd-pct').textContent = pct + '%';
+
+  let emoji, title;
+  if (pct >= 80) { emoji = '🏆'; title = 'Outstanding!'; }
+  else if (pct >= 60) { emoji = '🎯'; title = 'Good work!'; }
+  else if (pct >= 40) { emoji = '📚'; title = 'Keep studying!'; }
+  else { emoji = '💪'; title = 'More practice needed!'; }
+
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-title').textContent = title;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const reviewHtml = questions.map((q, i) => {
+    const correct = userAnswers[i] === q.ans;
+    const dotCls = correct ? 'r-correct' : 'r-wrong';
+    let ansLine = correct
+      ? `<div class="review-ans">Your answer: <span class="r-correct-a">${letters[userAnswers[i]]}. ${q.opts[userAnswers[i]]}</span></div>`
+      : userAnswers[i] === null
+        ? `<div class="review-ans"><span class="r-your">Not answered</span> — Correct: <span class="r-correct-a">${letters[q.ans]}. ${q.opts[q.ans]}</span></div>`
+        : `<div class="review-ans">Your answer: <span class="r-your">${letters[userAnswers[i]]}. ${q.opts[userAnswers[i]]}</span> — Correct: <span class="r-correct-a">${letters[q.ans]}. ${q.opts[q.ans]}</span></div>`;
+    return `<div class="review-item">
+      <div class="review-dot ${dotCls}"></div>
+      <div>
+        <div class="review-q">${i + 1}. ${q.q}</div>
+        ${ansLine}
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('review-list').innerHTML = reviewHtml;
+}
+
+function restartQuiz() {
+  current = 0;
+  userAnswers = new Array(questions.length).fill(null);
+  correctCount = 0;
+  wrongCount = 0;
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  renderQuestion();
+}
+</script>
+</body>
+</html>
